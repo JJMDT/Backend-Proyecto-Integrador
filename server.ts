@@ -2,6 +2,7 @@ import app from './src/app' // Importar la app de Express ya configurada
 // const dotenv = require('dotenv');
 import dotenv from 'dotenv'
 import { logger } from './src/config/logger';
+import {conexionBasedeDatos} from './src/pruebaconexion'
 
 
 dotenv.config();
@@ -21,6 +22,7 @@ const startExpress = async () => {
 
 const startServer = async () => {
     await startExpress();
+    await conexionBasedeDatos();
 }
 
 startServer();

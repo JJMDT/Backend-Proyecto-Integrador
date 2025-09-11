@@ -24,7 +24,9 @@
     "bunyan": "^1.8.15",
     "cors": "^2.8.5",
     "dotenv": "^17.2.2",
-    "express": "^5.1.0"
+    "express": "^5.1.0",
+    "mysql2": "^3.14.5",
+    "sequelize": "^6.37.7"
   },
   "devDependencies": {
     "@types/bunyan": "^1.8.11",
