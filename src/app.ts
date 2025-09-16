@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 // Ruta de prueba
 app.get('/', (req, res) => {
     res.send('¡Hola! El servidor Express está funcionando.');
-    logger.info("funciona la ruta get de ejemplo")
+    logger.info("Funciona la ruta get de ejemplo");
 });
 
 // Enlaza tus rutas aquí cuando las crees, por ejemplo:
@@ -41,7 +41,7 @@ app.use((req, res) => {
         status: 'error 404',
         message: 'Esa ruta no existe.'
     });
-    logger.warn("Ingreso a un ruta que no existe")
+    logger.warn("Ingreso a una ruta que no existe");
 });
 
 export default app;

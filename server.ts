@@ -1,16 +1,14 @@
 import app from './src/app' // Importar la app de Express ya configurada
-// const dotenv = require('dotenv');
 import dotenv from 'dotenv'
 import { logger } from './src/config/logger';
-import {conexionBasedeDatos} from './src/pruebaconexion'
-
+import { testConnection, createDatabaseIfNotExists } from './src/db';
+import { syncDatabase } from './src/models';
 
 dotenv.config();
 
-
-// Definir puerto desde .env o por defecto
+// Configuración del servidor
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST;
+const HOST = process.env.HOST || 'localhost';
 
 // Iniciar el servidor
 const startExpress = async () => {
@@ -19,10 +17,23 @@ const startExpress = async () => {
     });
 }
 
+// Función para inicializar la base de datos
+const initDatabase = async () => {
+    await createDatabaseIfNotExists(); // 1. Crear BD si no existe
+    await testConnection();            // 2. Probar conexión
+    await syncDatabase();              // 3. Crear/actualizar tablas
+};
 
+// Función principal para iniciar todo
 const startServer = async () => {
-    await startExpress();
-    await conexionBasedeDatos();
+    try {
+        await initDatabase();
+        await startExpress();
+        logger.info('🚀 Servidor iniciado correctamente');
+    } catch (error) {
+        logger.error('❌ Error al iniciar servidor:', error);
+        process.exit(1);
+    }
 }
 
 startServer();
