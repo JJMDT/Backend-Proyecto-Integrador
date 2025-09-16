@@ -1,5 +1,5 @@
 import User from './userModel';
-import { sequelize } from '../db';
+import  sequelize  from '../db';
 import { logger } from '../config/logger';
 
 // Exportar todos los modelos
