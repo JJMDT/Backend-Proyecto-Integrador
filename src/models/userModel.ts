@@ -18,6 +18,29 @@ class User extends Model<UserInterface, UserCreationAttributes> implements UserI
   public readonly createdAt!: Date;
   public readonly updatedAt!: Date;
 
+  // Métodos de instancia útiles
+  public getFullName(): string {
+    return `${this.name} ${this.lastname}`;
+  }
+
+  public isAdmin(): boolean {
+    return this.rol === "admin";
+  }
+
+  public isProfessional(): boolean {
+    return this.rol === "professional";
+  }
+
+  public isUser(): boolean {
+    return this.rol === "user";
+  }
+
+  // Método para obtener respuesta sin password (para enviar al frontend)
+  public toResponse() {
+    const { password, ...userWithoutPassword } = this.toJSON();
+    return userWithoutPassword;
+  }
+
 
 
 }
