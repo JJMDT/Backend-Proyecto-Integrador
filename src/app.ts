@@ -2,6 +2,7 @@
 import express from 'express';
 import cors from 'cors';
 import { logger } from './config/logger';
+import userRoutes from './routes/userRoutes';
 
 // Inicializamos la aplicación de Express
 const app = express();
@@ -34,6 +35,8 @@ app.get('/', (req, res) => {
 // Enlaza tus rutas aquí cuando las crees, por ejemplo:
 // import statusRoutes from './routes/statusRoutes';
 // app.use('/', statusRoutes);
+app.use("/api", userRoutes);
+
 
 // Manejador de errores 404. Este middleware debe ir al final de todas las rutas
 app.use((req, res) => {
