@@ -1,12 +1,11 @@
 import { Router } from "express";
-import { UserController } from "../controllers/userController";
+import { createUser, getAllUsers } from "../controllers/userController";
 
 const router = Router();
-const userController = new UserController();
 
 // Ruta para crear un nuevo usuario
-router.post("/users", (req, res) => userController.createUser(req, res));
+router.post("/users", createUser);
 // Ruta para obtener todos los usuarios
-router.get("/users", (req, res) => userController.getAllUsers(req, res));
+router.get("/users", getAllUsers);
 
 export default router;
