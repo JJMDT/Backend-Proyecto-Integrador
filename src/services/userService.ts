@@ -1,23 +1,19 @@
-import { UserRepository } from "../repositories/userRepository";
+import { create, findAll } from "../repositories/userRepository";
 import { UserInput, UserResponse } from "../interfaces";
 // NO SE USA - import bcrypt (para hashear contraseñas en el futuro)
 
-const userRepository = new UserRepository();
+// Función para crear un nuevo usuario
+export const createUser = async (userData: UserInput): Promise<UserResponse> => {
+    const newUser = await create(userData);
+    return newUser;
+};
 
-export class UserService {
-    // Crear un nuevo usuario
-    async createUser(userData: UserInput): Promise<UserResponse> {
-        const newUser = await userRepository.create(userData);
-        return newUser;
-    }
+// Función para obtener todos los usuarios
+export const getAllUsers = async (): Promise<UserResponse[]> => {
+    const users = await findAll();
+    return users;
+};
 
-    // Obtener todos los usuarios
-    async getAllUsers(): Promise<UserResponse[]> {
-        const users = await userRepository.findAll();
-        return users;
-    }
-
-    // NO SE USA - Métodos disponibles en repository pero no utilizados aún:
-    // async updateUser(id: string, userData: UserUpdate): Promise<UserResponse> 
-    // async deleteUser(id: string): Promise<boolean>
-}
+// NO SE USA - Funciones disponibles en repository pero no utilizadas aún:
+// export const updateUser = async (id: string, userData: UserUpdate): Promise<UserResponse> => { ... }
+// export const deleteUser = async (id: string): Promise<boolean> => { ... }

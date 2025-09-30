@@ -1,33 +1,31 @@
 import { User } from "../models";
-import { UserInput,UserUpdate } from "../interfaces";
+import { UserInput } from "../interfaces";
+// NO SE USA - UserUpdate (se usará cuando implementemos actualización)
 
-export class UserRepository {
-    // Crear un nuevo usuario
-    async create(user: UserInput){
-        return await User.create(user);
-    }
+// Función para crear un nuevo usuario
+export const create = async (user: UserInput) => {
+    return await User.create(user);
+};
 
-    // Obtener todos los usuarios
-    async findAll(){
-        return await User.findAll();
-    }
+// Función para obtener todos los usuarios
+export const findAll = async () => {
+    return await User.findAll();
+};
 
-    // modificar un usuario por id
-    async update(id: string, user: UserUpdate){
-        const existingUser = await User.findByPk(id);
-        if (!existingUser) {
-            throw new Error("Usuario no encontrado");
-        }
-        return await existingUser.update(user);
-    }
+// NO SE USA - Funciones para actualizar y eliminar (implementar cuando se necesiten)
+// export const update = async (id: string, user: UserUpdate) => {
+//     const existingUser = await User.findByPk(id);
+//     if (!existingUser) {
+//         throw new Error("Usuario no encontrado");
+//     }
+//     return await existingUser.update(user);
+// };
 
-    // Eliminar un usuario por id
-    async delete(id: string){
-        const existingUser = await User.findByPk(id);
-        if (!existingUser) {
-            throw new Error("Usuario no encontrado");
-        }
-        await existingUser.destroy();
-        return true;
-    }
-}
+// export const deleteUser = async (id: string) => {
+//     const existingUser = await User.findByPk(id);
+//     if (!existingUser) {
+//         throw new Error("Usuario no encontrado");
+//     }
+//     await existingUser.destroy();
+//     return true;
+// };
