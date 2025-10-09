@@ -3,6 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import { logger } from './config/logger';
 import userRoutes from './routes/userRoutes';
+import serviceRoutes from './routes/serviceRoutes';
 import professionalRoutes from './routes/professionalRoutes'
 
 // Inicializamos la aplicación de Express
@@ -37,6 +38,7 @@ app.get('/', (req, res) => {
 // import statusRoutes from './routes/statusRoutes';
 // app.use('/', statusRoutes);
 app.use("/api", userRoutes);
+app.use("/api", serviceRoutes);               
 app.use("/api", professionalRoutes);
 
 
