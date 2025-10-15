@@ -20,6 +20,10 @@ export class Professional extends Model<IProfessional, IProfessionalCreationAtrr
     public province!: string;
     public postalCode!: string;
     public location!: string;
+    // Timestamps
+    public readonly createdAt!: Date;
+    public readonly updatedAt!: Date;
+    
     public locationParseJson() { //parseo a Json
         if (this.location) {
             return JSON.parse(this.location) as ILocation;
@@ -143,5 +147,8 @@ Professional.init({
         sequelize,
         tableName: 'professionals',
         timestamps: true,
+        underscored: true,
     }
 )
+
+export default Professional;
