@@ -12,6 +12,15 @@ export const findAll = async () => {
     return await User.findAll();
 };
 
+export const findByEmail = async (emailData: string) => {
+    const findUser = await User.findOne({
+        where: {
+            email: emailData
+        }
+    })
+    return findUser
+}
+
 // NO SE USA - Funciones para actualizar y eliminar (implementar cuando se necesiten)
 // export const update = async (id: string, user: UserUpdate) => {
 //     const existingUser = await User.findByPk(id);

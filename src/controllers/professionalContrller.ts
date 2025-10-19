@@ -9,12 +9,12 @@ export const create = async (req: Request, res: Response): Promise<Response> => 
         logger.info("Datos recibidos para crear un Professional ", professionalData)
         const newProfessional = await createProfessional(professionalData)
         const response = {
-            status: 201,
+            status: "success 201",
             message: "Profesional creado de manera exitosa",
             data: newProfessional
         }
         logger.info("Professional creado exitosamente")
-        return res.status(response.status).json(response)
+        return res.status(201).json(response)
     } catch (error) {
         logger.error(error)
         return res.status(400).json(error)
