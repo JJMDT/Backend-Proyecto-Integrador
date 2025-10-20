@@ -2,10 +2,10 @@ import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../db";
 import { Service as ServiceInterface } from "../interfaces/ServiceInterface";
 
-// Atributos opcionales para la creación (Sequelize manejará idService, createdAt, updatedAt)
-interface ServiceCreationAttributes extends Optional<ServiceInterface, 'idService' | 'createdAt' | 'updatedAt'> {}
+// Atributos opcionales para la creación (Sequelize manejará id, createdAt, updatedAt)
+interface ServiceCreationAttributes extends Optional<ServiceInterface, 'id' | 'createdAt' | 'updatedAt'> {}
 class Service extends Model<ServiceInterface, ServiceCreationAttributes> implements ServiceInterface {
-    public idService!: string;
+    public id!: string;
     public idProfessional!: string;
     public name!: string;
     public description!: string;
@@ -22,7 +22,7 @@ class Service extends Model<ServiceInterface, ServiceCreationAttributes> impleme
 
 Service.init(
     {
-        idService: {
+        id: {
             type: DataTypes.UUID,
             defaultValue: DataTypes.UUIDV4,
             primaryKey: true,
@@ -30,8 +30,14 @@ Service.init(
         },
         idProfessional: {
             type: DataTypes.UUID,
-            defaultValue: DataTypes.UUIDV4,
             allowNull: false,
+            references: {
+                model: 'professionals',
+                key: 'id',
+            },
+            validate: {
+                notEmpty: { msg: "El ID del profesional no puede estar vacío" },
+            },
         },
         name: {
             type: DataTypes.STRING,

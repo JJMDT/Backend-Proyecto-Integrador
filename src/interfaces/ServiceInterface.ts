@@ -1,6 +1,6 @@
 // Interface para el Service completo (como se almacena en BD)
 export interface Service {
-    idService: string; // UUID como string es más compatible
+    id: string; // UUID como string es más compatible
     idProfessional: string;
     name: string;
     description: string;

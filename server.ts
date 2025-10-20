@@ -21,7 +21,7 @@ const startExpress = async () => {
 const initDatabase = async () => {
     await createDatabaseIfNotExists(); // 1. Crear BD si no existe
     await testConnection();            // 2. Probar conexión
-    await syncDatabase();              // 3. Crear/actualizar tablas
+    await syncDatabase(true);          // 3. Crear/actualizar tablas (force: true para recrear)
 };
 
 // Función principal para iniciar todo

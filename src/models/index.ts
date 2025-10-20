@@ -1,17 +1,24 @@
 import User from './userModel';
 import sequelize from '../db';
 import { logger } from '../config/logger';
-import {Professional} from '../models/professionalModel'
+import Professional from './professionalModel';
+import Service from './serviceModel';
+import Appointment from './appointmentModel';
 
 // Exportar todos los modelos
 export {
   User,
-  Professional
+  Professional,
+  Service,
+  Appointment
 };
 
 // Función para sincronizar la base de datos
 export const syncDatabase = async (force = false) => {
   try {
+    // Inicializar relaciones antes de sincronizar
+    initModels();
+    
     await sequelize.sync({ force }); // force: true eliminará y recreará las tablas
     logger.info('✅ Modelos sincronizados con la base de datos');
     const allSchemas =  (await (sequelize as any).showAllSchemas()).map((el:any) => el.Tables_in_proyecto_integrador);
@@ -23,16 +30,54 @@ export const syncDatabase = async (force = false) => {
   }
 };
 
-// NO SE USA - Función para inicializar relaciones entre modelos
-// export const initModels = async () => {
-//   try {
-//     // Aquí puedes agregar relaciones entre modelos cuando las tengas
-//     // User.hasMany(Post);
-//     // Post.belongsTo(User);
-//
-//     console.log('✅ Modelos inicializados correctamente');
-//   } catch (error) {
-//     console.error('❌ Error al inicializar modelos:', error);
-//     throw error;
-//   }
-// };
+// Función para inicializar relaciones entre modelos
+export const initModels = () => {
+  try {
+    // Relación User -> Appointments (1:N)
+    // Un usuario puede tener muchos turnos
+    User.hasMany(Appointment, {
+      foreignKey: 'idUser',
+      as: 'appointments'
+    });
+    
+    // Relación Appointment -> User (N:1)
+    // Un turno pertenece a un usuario
+    Appointment.belongsTo(User, {
+      foreignKey: 'idUser',
+      as: 'user'
+    });
+
+    // Relación Professional -> Services (1:N)
+    // Un profesional puede tener muchos servicios
+    Professional.hasMany(Service, {
+      foreignKey: 'idProfessional',
+      as: 'services'
+    });
+    
+    // Relación Service -> Professional (N:1)
+    // Un servicio pertenece a un profesional
+    Service.belongsTo(Professional, {
+      foreignKey: 'idProfessional',
+      as: 'professional'
+    });
+
+    // Relación Service -> Appointments (1:N)
+    // Un servicio puede tener muchos turnos
+    Service.hasMany(Appointment, {
+      foreignKey: 'idService',
+      as: 'appointments'
+    });
+    
+    // Relación Appointment -> Service (N:1)
+    // Un turno está asociado a un servicio
+    Appointment.belongsTo(Service, {
+      foreignKey: 'idService',
+      as: 'service'
+    });
+
+    logger.info('✅ Relaciones entre modelos inicializadas correctamente');
+  } catch (error) {
+    logger.error('❌ Error al inicializar relaciones entre modelos:', error);
+    throw error;
+  }
+};
