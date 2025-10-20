@@ -45,6 +45,7 @@ export interface UserResponse {
     dni: string;
     email: string;
     rol: "admin" | "user" | "professional";
+    password: string;
     createdAt: Date;
     updatedAt: Date;
 }
