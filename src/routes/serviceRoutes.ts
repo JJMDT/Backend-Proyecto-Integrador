@@ -4,8 +4,8 @@ import { createService, getAllServices } from "../controllers/serviceController"
 const router = Router();
 
 // Ruta para crear un nuevo servicio
-router.post("/services", createService);
+router.post("/", createService);
 // Ruta para obtener todos los servicios
-router.get("/services", getAllServices);
+router.get("/", getAllServices);
 
 export default router;

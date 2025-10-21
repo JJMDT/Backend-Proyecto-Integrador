@@ -39,11 +39,11 @@ app.get('/', (req, res) => {
 // Enlaza tus rutas aquí cuando las crees, por ejemplo:
 // import statusRoutes from './routes/statusRoutes';
 // app.use('/', statusRoutes);
-app.use("/api", userRoutes);
-app.use("/api", serviceRoutes);               
-app.use("/api", professionalRoutes);
-app.use("/api", appointmentRoutes);
-app.use('/api',authRoutes);
+app.use("/users", userRoutes);
+app.use("/services", serviceRoutes);               
+app.use("/professionals", professionalRoutes);
+app.use("/appointments", appointmentRoutes);
+app.use('/auth',authRoutes);
 
 
 // Manejador de errores 404. Este middleware debe ir al final de todas las rutas
