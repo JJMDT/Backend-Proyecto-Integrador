@@ -5,10 +5,10 @@ import { verifyToken } from '../middlewares/authMiddleware'
 const router = Router();
 
 // Ruta para crear un nuevo usuario
-router.post("/users", createUser);
+router.post("/", createUser);
 // Ruta para obtener todos los usuarios
 router.get(
-    "/users",
+    "/",
     verifyToken,
     getAllUsers
 );

@@ -4,15 +4,15 @@ import * as appointmentController from '../controllers/appointmentController';
 const router = Router();
 
 // GET /api/appointments - Obtener todos los turnos
-router.get('/appointments', appointmentController.getAllAppointments);
+router.get('/', appointmentController.getAllAppointments);
 
 // GET /api/appointments/:id - Obtener turno por ID
-router.get('/appointments/:id', appointmentController.getAppointmentById);
+router.get('/:id', appointmentController.getAppointmentById);
 
 // GET /api/appointments/user/:idUser - Obtener turnos por usuario
-router.get('/appointments/user/:idUser', appointmentController.getAppointmentsByUser);
+router.get('/user/:idUser', appointmentController.getAppointmentsByUser);
 
 // POST /api/appointments - Crear un nuevo turno
-router.post('/appointments', appointmentController.createAppointment);
+router.post('/', appointmentController.createAppointment);
 
 export default router;
