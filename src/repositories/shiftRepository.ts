@@ -1,16 +1,16 @@
-import Appointment from '../models/appointmentModel';
+import Shift from '../models/shiftModel';
 import User from '../models/userModel';
 import Service from '../models/serviceModel';
 import Professional from '../models/professionalModel';
-import { AppointmentInput } from '../interfaces/AppointmentInterface';
+import { ShiftInput } from '../interfaces/ShiftInterface';
 import { logger } from '../config/logger';
 
 // Crear un nuevo turno
-export const create = async (appointmentData: AppointmentInput) => {
+export const create = async (shiftData: ShiftInput) => {
   try {
-    const appointment = await Appointment.create(appointmentData);
-    logger.info(`Turno creado exitosamente con ID: ${appointment.id}`);
-    return appointment;
+    const shift = await Shift.create(shiftData);
+    logger.info(`Turno creado exitosamente con ID: ${shift.id}`);
+    return shift;
   } catch (error) {
     logger.error('Error al crear turno en repository:', error);
     throw error;
@@ -20,7 +20,7 @@ export const create = async (appointmentData: AppointmentInput) => {
 // Obtener todos los turnos
 export const findAll = async () => {
   try {
-    const appointments = await Appointment.findAll({
+    const shifts = await Shift.findAll({
       include: [
         {
           model: User,
@@ -43,8 +43,8 @@ export const findAll = async () => {
       order: [['date', 'ASC'], ['time', 'ASC']]
     });
     
-    logger.info(`Se encontraron ${appointments.length} turnos`);
-    return appointments;
+    logger.info(`Se encontraron ${shifts.length} turnos`);
+    return shifts;
   } catch (error) {
     logger.error('Error al obtener turnos en repository:', error);
     throw error;
@@ -54,7 +54,7 @@ export const findAll = async () => {
 // Obtener turnos por usuario
 export const findByUserId = async (idUser: string) => {
   try {
-    const appointments = await Appointment.findAll({
+    const shifts = await Shift.findAll({
       where: { idUser },
       include: [
         {
@@ -78,8 +78,8 @@ export const findByUserId = async (idUser: string) => {
       order: [['date', 'ASC'], ['time', 'ASC']]
     });
     
-    logger.info(`Se encontraron ${appointments.length} turnos para el usuario ${idUser}`);
-    return appointments;
+    logger.info(`Se encontraron ${shifts.length} turnos para el usuario ${idUser}`);
+    return shifts;
   } catch (error) {
     logger.error(`Error al obtener turnos del usuario ${idUser} en repository:`, error);
     throw error;
@@ -89,7 +89,7 @@ export const findByUserId = async (idUser: string) => {
 // Obtener turno por ID
 export const findById = async (id: string) => {
   try {
-    const appointment = await Appointment.findByPk(id, {
+    const shift = await Shift.findByPk(id, {
       include: [
         {
           model: User,
@@ -111,13 +111,13 @@ export const findById = async (id: string) => {
       ]
     });
     
-    if (appointment) {
+    if (shift) {
       logger.info(`Turno encontrado con ID: ${id}`);
     } else {
       logger.warn(`No se encontró turno con ID: ${id}`);
     }
     
-    return appointment;
+    return shift;
   } catch (error) {
     logger.error(`Error al obtener turno con ID ${id} en repository:`, error);
     throw error;
@@ -127,7 +127,7 @@ export const findById = async (id: string) => {
 // Verificar disponibilidad de horario
 export const checkTimeAvailability = async (date: Date, time: string, idService: string) => {
   try {
-    const existingAppointment = await Appointment.findOne({
+    const existingShift = await Shift.findOne({
       where: {
         date,
         time,
@@ -135,7 +135,7 @@ export const checkTimeAvailability = async (date: Date, time: string, idService:
       }
     });
     
-    const isAvailable = !existingAppointment;
+    const isAvailable = !existingShift;
     logger.info(`Verificación de disponibilidad para ${date} ${time}: ${isAvailable ? 'Disponible' : 'No disponible'}`);
     
     return isAvailable;

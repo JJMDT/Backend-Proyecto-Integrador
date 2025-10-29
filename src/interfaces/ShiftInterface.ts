@@ -1,5 +1,5 @@
-// Interface para el Appointment completo (como se almacena en BD)
-export interface IAppointment {
+// Interface para el Shift completo (como se almacena en BD)
+export interface IShift {
     id: string;
     idUser: string;
     idService: string;
@@ -12,7 +12,7 @@ export interface IAppointment {
 }
 
 // Interface para los datos que vienen del frontend (sin id, timestamps)
-export interface AppointmentInput {
+export interface ShiftInput {
     idUser: string;
     idService: string;
     date: Date;
@@ -21,8 +21,8 @@ export interface AppointmentInput {
     petname: string;
 }
 
-// Interface para actualizar appointment (todos los campos opcionales)
-export interface AppointmentUpdate {
+// Interface para actualizar shift (todos los campos opcionales)
+export interface ShiftUpdate {
     idUser?: string;
     idService?: string;
     date?: Date;
@@ -31,8 +31,8 @@ export interface AppointmentUpdate {
     petname?: string;
 }
 
-// Interface para respuesta del appointment (completa)
-export interface AppointmentResponse {
+// Interface para respuesta del shift (completa)
+export interface ShiftResponse {
     id: string;
     idUser: string;
     idService: string;
@@ -44,8 +44,8 @@ export interface AppointmentResponse {
     updatedAt: Date;
 }
 
-// Interface para appointment con información relacionada (para consultas con joins)
-export interface AppointmentWithDetails {
+// Interface para shift con información relacionada (para consultas con joins)
+export interface ShiftWithDetails {
     id: string;
     date: Date;
     time: string;

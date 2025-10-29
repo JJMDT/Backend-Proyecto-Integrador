@@ -5,7 +5,7 @@ import { logger } from './config/logger';
 import userRoutes from './routes/userRoutes';
 import serviceRoutes from './routes/serviceRoutes';
 import professionalRoutes from './routes/professionalRoutes';
-import appointmentRoutes from './routes/appointmentRoutes';
+import shiftRoutes from './routes/shiftRoutes';
 import authRoutes  from './routes/authRoutes';
 
 // Inicializamos la aplicación de Express
@@ -42,7 +42,7 @@ app.get('/', (req, res) => {
 app.use("/users", userRoutes);
 app.use("/services", serviceRoutes);               
 app.use("/professionals", professionalRoutes);
-app.use("/appointments", appointmentRoutes);
+app.use("/shifts", shiftRoutes);
 app.use('/auth',authRoutes);
 
 
