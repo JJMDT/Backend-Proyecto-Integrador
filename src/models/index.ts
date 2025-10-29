@@ -44,42 +44,42 @@ export const initModels = () => {
     // Relación User -> Appointments (1:N)
     // Un usuario puede tener muchos turnos
     User.hasMany(Appointment, {
-      foreignKey: 'userId',
+      foreignKey: 'idUser',
       as: 'appointments'
     });
     
     // Relación Appointment -> User (N:1)
     // Un turno pertenece a un usuario
     Appointment.belongsTo(User, {
-      foreignKey: 'userId',
+      foreignKey: 'idUser',
       as: 'user'
     });
 
     // Relación Professional -> Services (1:N)
     // Un profesional puede tener muchos servicios
     Professional.hasMany(Service, {
-      foreignKey: 'professionalId',
+      foreignKey: 'idProfessional',
       as: 'services'
     });
     
     // Relación Service -> Professional (N:1)
     // Un servicio pertenece a un profesional
     Service.belongsTo(Professional, {
-      foreignKey: 'professionalId',
+      foreignKey: 'idProfessional',
       as: 'professional'
     });
 
     // Relación Service -> Appointments (1:N)
     // Un servicio puede tener muchos turnos
     Service.hasMany(Appointment, {
-      foreignKey: 'serviceId',
+      foreignKey: 'idService',
       as: 'appointments'
     });
     
     // Relación Appointment -> Service (N:1)
     // Un turno está asociado a un servicio
     Appointment.belongsTo(Service, {
-      foreignKey: 'serviceId',
+      foreignKey: 'idService',
       as: 'service'
     });
 

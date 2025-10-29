@@ -49,6 +49,7 @@ Appointment.init(
     idUser: {
       type: DataTypes.UUID,
       allowNull: false,
+      field: 'id_user', // Especifica explícitamente el nombre de la columna en la BD
       references: {
         model: 'users',
         key: 'id',
@@ -60,9 +61,10 @@ Appointment.init(
     idService: {
       type: DataTypes.UUID,
       allowNull: false,
+      field: 'id_service', // Especifica explícitamente el nombre de la columna en la BD
       references: {
         model: 'services',
-        key: 'id',
+        key: 'id', // Referencia a la PK correcta de services
       },
       validate: {
         notEmpty: { msg: "El ID del servicio no puede estar vacío" },
