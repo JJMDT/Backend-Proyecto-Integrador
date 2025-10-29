@@ -1,25 +1,25 @@
 import { Request, Response } from 'express';
-import * as appointmentService from '../services/appointmentService';
+import * as shiftService from '../services/shiftService';
 import { logger } from '../config/logger';
 
 // Crear un nuevo turno
-export const createAppointment = async (req: Request, res: Response) => {
+export const createShift = async (req: Request, res: Response) => {
   try {
     // Validar datos de entrada
-    appointmentService.validateAppointmentInput(req.body);
+    shiftService.validateShiftInput(req.body);
 
     // Crear el turno
-    const newAppointment = await appointmentService.createAppointment(req.body);
+    const newShift = await shiftService.createShift(req.body);
 
-    logger.info(`Controller: Turno creado exitosamente con ID: ${newAppointment.id}`);
+    logger.info(`Controller: Turno creado exitosamente con ID: ${newShift.id}`);
     
     res.status(201).json({
       status: 'success',
       message: 'Turno creado exitosamente',
-      data: newAppointment
+      data: newShift
     });
   } catch (error: any) {
-    logger.error('Error en createAppointment controller:', error);
+    logger.error('Error en createShift controller:', error);
     
     // Manejo de errores específicos
     if (error.name === 'SequelizeValidationError') {
@@ -48,20 +48,20 @@ export const createAppointment = async (req: Request, res: Response) => {
 };
 
 // Obtener todos los turnos
-export const getAllAppointments = async (req: Request, res: Response) => {
+export const getAllShifts = async (req: Request, res: Response) => {
   try {
-    const appointments = await appointmentService.getAllAppointments();
+    const shifts = await shiftService.getAllShifts();
 
-    logger.info(`Controller: Se obtuvieron ${appointments.length} turnos`);
+    logger.info(`Controller: Se obtuvieron ${shifts.length} turnos`);
     
     res.status(200).json({
       status: 'success',
       message: 'Turnos obtenidos exitosamente',
-      data: appointments,
-      count: appointments.length
+      data: shifts,
+      count: shifts.length
     });
   } catch (error: any) {
-    logger.error('Error en getAllAppointments controller:', error);
+    logger.error('Error en getAllShifts controller:', error);
     
     res.status(500).json({
       status: 'error',
@@ -71,7 +71,7 @@ export const getAllAppointments = async (req: Request, res: Response) => {
 };
 
 // Obtener turnos por usuario
-export const getAppointmentsByUser = async (req: Request, res: Response) => {
+export const getShiftsByUser = async (req: Request, res: Response) => {
   try {
     const { idUser } = req.params;
 
@@ -82,18 +82,18 @@ export const getAppointmentsByUser = async (req: Request, res: Response) => {
       });
     }
 
-    const appointments = await appointmentService.getAppointmentsByUserId(idUser);
+    const shifts = await shiftService.getShiftsByUserId(idUser);
 
-    logger.info(`Controller: Se obtuvieron ${appointments.length} turnos para el usuario ${idUser}`);
+    logger.info(`Controller: Se obtuvieron ${shifts.length} turnos para el usuario ${idUser}`);
     
     res.status(200).json({
       status: 'success',
       message: 'Turnos del usuario obtenidos exitosamente',
-      data: appointments,
-      count: appointments.length
+      data: shifts,
+      count: shifts.length
     });
   } catch (error: any) {
-    logger.error(`Error en getAppointmentsByUser controller:`, error);
+    logger.error(`Error en getShiftsByUser controller:`, error);
     
     res.status(500).json({
       status: 'error',
@@ -103,7 +103,7 @@ export const getAppointmentsByUser = async (req: Request, res: Response) => {
 };
 
 // Obtener turno por ID
-export const getAppointmentById = async (req: Request, res: Response) => {
+export const getShiftById = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
@@ -114,17 +114,17 @@ export const getAppointmentById = async (req: Request, res: Response) => {
       });
     }
 
-    const appointment = await appointmentService.getAppointmentById(id);
+    const shift = await shiftService.getShiftById(id);
 
     logger.info(`Controller: Turno obtenido exitosamente con ID: ${id}`);
     
     res.status(200).json({
       status: 'success',
       message: 'Turno obtenido exitosamente',
-      data: appointment
+      data: shift
     });
   } catch (error: any) {
-    logger.error(`Error en getAppointmentById controller:`, error);
+    logger.error(`Error en getShiftById controller:`, error);
     
     if (error.message === 'Turno no encontrado') {
       return res.status(404).json({

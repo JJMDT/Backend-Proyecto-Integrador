@@ -31,6 +31,7 @@ Service.init(
         idProfessional: {
             type: DataTypes.UUID,
             allowNull: false,
+            field: 'id_professional', // Especifica explícitamente el nombre de la columna en la BD
             references: {
                 model: 'professionals',
                 key: 'id',

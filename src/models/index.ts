@@ -3,14 +3,14 @@ import sequelize from '../db';
 import { logger } from '../config/logger';
 import Professional from './professionalModel';
 import Service from './serviceModel';
-import Appointment from './appointmentModel';
+import Shift from './shiftModel';
 
 // Exportar todos los modelos
 export {
   User,
   Professional,
   Service,
-  Appointment
+  Shift
 };
 
 // Función para sincronizar la base de datos
@@ -19,8 +19,16 @@ export const syncDatabase = async (force = false) => {
     // Inicializar relaciones antes de sincronizar
     initModels();
     
-    await sequelize.sync({ force }); // force: true eliminará y recreará las tablas
-    logger.info('✅ Modelos sincronizados con la base de datos');
+    // force: false (por defecto) NO eliminará datos existentes
+    // force: true eliminará y recreará las tablas (PELIGROSO - borra todos los datos)
+    await sequelize.sync({ force });
+    
+    if (force) {
+      logger.warn('⚠️ ADVERTENCIA: Base de datos recreada - Todos los datos anteriores fueron eliminados');
+    } else {
+      logger.info('✅ Modelos sincronizados con la base de datos (datos preservados)');
+    }
+    
     const allSchemas =  (await (sequelize as any).showAllSchemas()).map((el:any) => el.Tables_in_proyecto_integrador);
     logger.info(`Todos los Models(Tables) en la  Data Base ${process.env.DB_NAME}: ${allSchemas.join(', ')}`)
     logger.info('Modelos(Tablas) Data Base OK');
@@ -33,16 +41,16 @@ export const syncDatabase = async (force = false) => {
 // Función para inicializar relaciones entre modelos
 export const initModels = () => {
   try {
-    // Relación User -> Appointments (1:N)
+    // Relación User -> Shifts (1:N)
     // Un usuario puede tener muchos turnos
-    User.hasMany(Appointment, {
+    User.hasMany(Shift, {
       foreignKey: 'idUser',
-      as: 'appointments'
+      as: 'shifts'
     });
     
-    // Relación Appointment -> User (N:1)
+    // Relación Shift -> User (N:1)
     // Un turno pertenece a un usuario
-    Appointment.belongsTo(User, {
+    Shift.belongsTo(User, {
       foreignKey: 'idUser',
       as: 'user'
     });
@@ -61,16 +69,16 @@ export const initModels = () => {
       as: 'professional'
     });
 
-    // Relación Service -> Appointments (1:N)
+    // Relación Service -> Shifts (1:N)
     // Un servicio puede tener muchos turnos
-    Service.hasMany(Appointment, {
+    Service.hasMany(Shift, {
       foreignKey: 'idService',
-      as: 'appointments'
+      as: 'shifts'
     });
     
-    // Relación Appointment -> Service (N:1)
+    // Relación Shift -> Service (N:1)
     // Un turno está asociado a un servicio
-    Appointment.belongsTo(Service, {
+    Shift.belongsTo(Service, {
       foreignKey: 'idService',
       as: 'service'
     });

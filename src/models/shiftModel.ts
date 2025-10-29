@@ -1,11 +1,11 @@
 import { DataTypes, Model, Optional } from "sequelize";
 import sequelize from "../db";
-import { IAppointment } from "../interfaces/AppointmentInterface";
+import { IShift } from "../interfaces/ShiftInterface";
 
 // Atributos opcionales para la creación (Sequelize manejará id, createdAt, updatedAt)
-interface AppointmentCreationAttributes extends Optional<IAppointment, 'id' | 'createdAt' | 'updatedAt'> {}
+interface ShiftCreationAttributes extends Optional<IShift, 'id' | 'createdAt' | 'updatedAt'> {}
 
-class Appointment extends Model<IAppointment, AppointmentCreationAttributes> implements IAppointment {
+class Shift extends Model<IShift, ShiftCreationAttributes> implements IShift {
   public id!: string;
   public idUser!: string;
   public idService!: string;
@@ -21,15 +21,15 @@ class Appointment extends Model<IAppointment, AppointmentCreationAttributes> imp
   // Métodos de instancia útiles
   public isToday(): boolean {
     const today = new Date();
-    const appointmentDate = new Date(this.date);
-    return appointmentDate.toDateString() === today.toDateString();
+    const shiftDate = new Date(this.date);
+    return shiftDate.toDateString() === today.toDateString();
   }
 
-  // Método para verificar si el appointment es en el futuro
+  // Método para verificar si el turno es en el futuro
   public isFuture(): boolean {
     const now = new Date();
-    const appointmentDateTime = new Date(`${this.date.toDateString()} ${this.time}`);
-    return appointmentDateTime > now;
+    const shiftDateTime = new Date(`${this.date.toDateString()} ${this.time}`);
+    return shiftDateTime > now;
   }
 
   // Método para obtener fecha y hora formateada
@@ -38,7 +38,7 @@ class Appointment extends Model<IAppointment, AppointmentCreationAttributes> imp
   }
 }
 
-Appointment.init(
+Shift.init(
   {
     id: {
       type: DataTypes.UUID,
@@ -49,6 +49,7 @@ Appointment.init(
     idUser: {
       type: DataTypes.UUID,
       allowNull: false,
+      field: 'id_user', // Especifica explícitamente el nombre de la columna en la BD
       references: {
         model: 'users',
         key: 'id',
@@ -60,9 +61,10 @@ Appointment.init(
     idService: {
       type: DataTypes.UUID,
       allowNull: false,
+      field: 'id_service', // Especifica explícitamente el nombre de la columna en la BD
       references: {
         model: 'services',
-        key: 'id',
+        key: 'id', // Referencia a la PK correcta de services
       },
       validate: {
         notEmpty: { msg: "El ID del servicio no puede estar vacío" },
@@ -125,8 +127,8 @@ Appointment.init(
   },
   {
     sequelize,
-    modelName: "Appointment",
-    tableName: "shifts", // Nombre de tabla según tu diagrama
+    modelName: "Shift",
+    tableName: "shifts",
     timestamps: true,
     underscored: true,
     indexes: [
@@ -146,4 +148,4 @@ Appointment.init(
   }
 );
 
-export default Appointment;
+export default Shift;
