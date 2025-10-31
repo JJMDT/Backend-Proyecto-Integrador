@@ -2,6 +2,11 @@
 import express from 'express';
 import cors from 'cors';
 import { logger } from './config/logger';
+import userRoutes from './routes/userRoutes';
+import serviceRoutes from './routes/serviceRoutes';
+import professionalRoutes from './routes/professionalRoutes';
+import shiftRoutes from './routes/shiftRoutes';
+import authRoutes  from './routes/authRoutes';
 
 // Inicializamos la aplicación de Express
 const app = express();
@@ -28,12 +33,18 @@ app.use(express.urlencoded({ extended: true }));
 // Ruta de prueba
 app.get('/', (req, res) => {
     res.send('¡Hola! El servidor Express está funcionando.');
-    logger.info("funciona la ruta get de ejemplo")
+    logger.info("Funciona la ruta get de ejemplo");
 });
 
 // Enlaza tus rutas aquí cuando las crees, por ejemplo:
 // import statusRoutes from './routes/statusRoutes';
 // app.use('/', statusRoutes);
+app.use("/users", userRoutes);
+app.use("/services", serviceRoutes);               
+app.use("/professionals", professionalRoutes);
+app.use("/shifts", shiftRoutes);
+app.use('/auth',authRoutes);
+
 
 // Manejador de errores 404. Este middleware debe ir al final de todas las rutas
 app.use((req, res) => {
@@ -41,7 +52,7 @@ app.use((req, res) => {
         status: 'error 404',
         message: 'Esa ruta no existe.'
     });
-    logger.warn("Ingreso a un ruta que no existe")
+    logger.warn("Ingreso a una ruta que no existe");
 });
 
 export default app;
