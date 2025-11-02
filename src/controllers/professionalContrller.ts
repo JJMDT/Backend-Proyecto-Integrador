@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { logger } from "../config/logger";
 import { ProfessionalCreate } from '../interfaces/ProfessionalInterface'
-import { createProfessional, getAllProfessionals } from '../services/professionalService'
+import { createProfessional, getAllProfessionals, getAllProfessionalsWithServices } from '../services/professionalService'
 
 export const create = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -34,5 +34,26 @@ export const getAll = async (req: Request, res: Response): Promise<Response> => 
     } catch (error) {
         logger.error(error);
         return res.status(400).json(error)
+    }
+}
+
+export const getAllWithServices = async (req: Request, res: Response): Promise<Response> => {
+    logger.info("Recibiendo la petición para mostrar todos los Profesionales con sus Servicios")
+    try {
+        const professionals = await getAllProfessionalsWithServices();
+        const response = {
+            status: 200,
+            message: "Mostrando todos los profesionales con sus servicios",
+            data: professionals
+        }
+        logger.info(`Se encontraron ${professionals.length} profesionales con servicios`)
+        return res.status(response.status).json(response)
+    } catch (error) {
+        logger.error("Error al obtener profesionales con servicios:", error);
+        return res.status(400).json({
+            status: 400,
+            message: "Error al obtener profesionales con servicios",
+            error: error
+        })
     }
 }

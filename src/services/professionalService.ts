@@ -1,6 +1,6 @@
 //Contiene la lógica de negocio (qué hay que hacer, cómo combinar los datos)
 import { ProfessionalCreate } from '../interfaces/ProfessionalInterface';
-import { create, findAll } from '../repositories/professionalRepository'
+import { create, findAll, findAllWithServices } from '../repositories/professionalRepository'
 
 //falta manejar los posibles errores
 export const createProfessional = async (professionalData: ProfessionalCreate) => {
@@ -10,5 +10,10 @@ export const createProfessional = async (professionalData: ProfessionalCreate) =
 
 export const getAllProfessionals = async () =>{
     const professionals = await findAll();
+    return professionals;
+}
+
+export const getAllProfessionalsWithServices = async () => {
+    const professionals = await findAllWithServices();
     return professionals;
 }
