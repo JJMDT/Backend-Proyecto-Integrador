@@ -12,7 +12,7 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-//Definís tus plantillas (pueden ser texto o HTML)
+//plantillas para el envio de email
 export const emailTemplates = {
   welcome: (name: string) => ({
     subject: "¡Bienvenido!",
