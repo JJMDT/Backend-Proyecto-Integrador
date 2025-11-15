@@ -2,21 +2,25 @@ import { Request, Response } from 'express';
 import * as shiftService from '../services/shiftService';
 import { logger } from '../config/logger';
 
-// Crear un nuevo turno
+// Crear un nuevo turno CON QR y email
 export const createShift = async (req: Request, res: Response) => {
   try {
     // Validar datos de entrada
     shiftService.validateShiftInput(req.body);
 
-    // Crear el turno
-    const newShift = await shiftService.createShift(req.body);
+    // Crear el turno con QR y envío de email
+    const result = await shiftService.createShiftWithQR(req.body);
 
-    logger.info(`Controller: Turno creado exitosamente con ID: ${newShift.id}`);
+    logger.info(`Controller: Turno creado exitosamente con ID: ${result.shift.id}`);
     
     res.status(201).json({
       status: 'success',
-      message: 'Turno creado exitosamente',
-      data: newShift
+      message: 'Turno creado exitosamente. Se ha enviado un email de confirmación con el código QR.',
+      data: {
+        shift: result.shift,
+        qrCode: result.qrCode,
+        emailSent: result.emailSent
+      }
     });
   } catch (error: any) {
     logger.error('Error en createShift controller:', error);
