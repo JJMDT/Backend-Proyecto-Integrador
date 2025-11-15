@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { logger } from "../config/logger";
 import { ProfessionalCreate } from '../interfaces/ProfessionalInterface'
-import { createProfessional, getAllProfessionals, getAllProfessionalsWithServices } from '../services/professionalService'
+import { createProfessional, getAllProfessionals, getAllProfessionalsWithServices, getProfessionalWithServices } from '../services/professionalService'
 
 export const create = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -57,3 +57,33 @@ export const getAllWithServices = async (req: Request, res: Response): Promise<R
         })
     }
 }
+
+// mostrar la informacion de un profesional en especifico junto con sus servicios
+export const getOneWithServices = async (req: Request, res: Response): Promise<Response> => {
+    const professionalId = req.params.id;
+    logger.info(`Recibiendo la petición para mostrar el profesional con ID ${professionalId} y sus servicios`);
+    try {
+        const professional = await getProfessionalWithServices(professionalId);
+        if (!professional) {
+            logger.warn(`Profesional con ID ${professionalId} no encontrado`);
+            return res.status(404).json({
+                status: 404,
+                message: `Profesional con ID ${professionalId} no encontrado`
+            });
+        }
+        const response = {
+            status: 200,
+            message: `Mostrando profesional con ID ${professionalId} y sus servicios`,
+            data: professional
+        };
+        logger.info(`Profesional con ID ${professionalId} encontrado exitosamente`);
+        return res.status(response.status).json(response);
+    } catch (error) {
+        logger.error(`Error al obtener profesional con ID ${professionalId} y sus servicios:`, error);
+        return res.status(400).json({
+            status: 400,
+            message: `Error al obtener profesional con ID ${professionalId} y sus servicios`,
+            error: error
+        });
+    }
+};

@@ -23,3 +23,17 @@ export const findAllWithServices = async () => {
         attributes: { exclude: ['password'] } // Excluir la contraseña por seguridad
     });
 };
+
+// mostrar la informacion de un profesional en especifico junto con sus servicios
+export const findProfessionalWithServices = async (professionalId: string) => {
+    return await Professional.findByPk(professionalId, {
+        include: [
+            {
+                model: Service,
+                as: 'services',
+                attributes: ['id', 'name', 'description', 'price', 'createdAt', 'updatedAt']
+            }
+        ],
+        attributes: { exclude: ['password'] } // Excluir la contraseña por seguridad
+    });
+};

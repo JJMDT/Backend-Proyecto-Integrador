@@ -15,4 +15,5 @@ router.get('/user/:idUser', shiftController.getShiftsByUser);
 // POST /api/shifts - Crear un nuevo turno
 router.post('/', shiftController.createShift);
 
+// mostrar todos los turnos de un profesional en especifico
 export default router;

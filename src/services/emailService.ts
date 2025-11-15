@@ -21,6 +21,14 @@ export const emailTemplates = {
     <p>Gracias por registrarte </p>
     `
   }),
+  turnoconfirmado: (name: string) => ({
+    subject: "confirmacion de turno ",
+    html: `
+    <h1>Hola ${name}!</h1>
+    <p>Tu turno ha sido registrado exitosamente.</p>
+    <img src="cid:qr" alt="QR Code">
+    `
+  }),
 
   resetPassword: (name: string, link: string) => ({
     subject: "Recupera tu contraseña 🔑",
