@@ -10,6 +10,8 @@ export const createService = async (req: Request, res:Response): Promise<Respons
         logger.info( 'Datos recibidos para crear servicio:', serviceData);
 
         const newService = await createServiceService(serviceData);
+        //qr -- generar código QR
+        // envio de email con el qr adjunto
         return res.status(201).json(newService);
     } catch (error: unknown) {
         logger.error('Error al crear servicio:', error);
