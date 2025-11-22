@@ -92,23 +92,23 @@ Professional.init({
     },
     street: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     streetNumber: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
     neighborhood: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     province: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: true
     },
     location: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
         set(value) { // lo convieto lo que llega a Json string
             this.setDataValue('location', JSON.stringify(value));
         },
@@ -119,7 +119,7 @@ Professional.init({
     },
     imagesUrl: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: true,
         set(value) {
             this.setDataValue('imagesUrl', JSON.stringify(value));
         },
@@ -140,7 +140,7 @@ Professional.init({
     },
     postalCode: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: true,
     },
 },
     {
