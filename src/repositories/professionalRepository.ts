@@ -8,7 +8,11 @@ export const create = async (professionalData: ProfessionalCreate) => {
 };
 
 export const findAll = async () => {
-    return await Professional.findAll();
+    return await Professional.findAll({
+        where: {
+            active: true
+        }
+    });
 };
 
 export const findAllWithServices = async () => {
@@ -20,13 +24,17 @@ export const findAllWithServices = async () => {
                 attributes: ['id', 'name', 'description', 'price', 'createdAt', 'updatedAt']
             }
         ],
-        attributes: { exclude: ['password'] } // Excluir la contraseña por seguridad
+        attributes: { exclude: ['password'] }.exclude, // Excluir la contraseña por seguridad
+         where: {
+            active: true
+        }
     });
 };
 
 // mostrar la informacion de un profesional en especifico junto con sus servicios
 export const findProfessionalWithServices = async (professionalId: string) => {
     return await Professional.findByPk(professionalId, {
+        
         include: [
             {
                 model: Service,
@@ -34,7 +42,8 @@ export const findProfessionalWithServices = async (professionalId: string) => {
                 attributes: ['id', 'name', 'description', 'price', 'createdAt', 'updatedAt']
             }
         ],
-        attributes: { exclude: ['password'] } // Excluir la contraseña por seguridad
+        attributes: { exclude: ['password'] }, // Excluir la contraseña por seguridad
+        
     });
 };
 
