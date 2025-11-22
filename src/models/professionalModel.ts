@@ -23,7 +23,6 @@ export class Professional extends Model<IProfessional, IProfessionalCreationAtrr
     // Timestamps
     public readonly createdAt!: Date;
     public readonly updatedAt!: Date;
-    
     public locationParseJson() { //parseo a Json
         if (this.location) {
             return JSON.parse(this.location) as ILocation;
@@ -32,7 +31,7 @@ export class Professional extends Model<IProfessional, IProfessionalCreationAtrr
     }
     public imagesUrl!: string;
     public imagesUrlParseJson() { //parseo a Json
-        if (this.location) {
+        if (this.imagesUrl) {
             return JSON.parse(this.imagesUrl) as string[];
         }
         return []
@@ -112,10 +111,10 @@ Professional.init({
         set(value) { // lo convieto lo que llega a Json string
             this.setDataValue('location', JSON.stringify(value));
         },
-        // get() {
-        //   const raw = this.getDataValue('location');
-        //   return raw ? JSON.parse(raw) : null;
-        // }
+        get() {
+            const raw = this.getDataValue("location");
+            return raw ? JSON.parse(raw) : null;
+        }
     },
     imagesUrl: {
         type: DataTypes.TEXT,
@@ -123,6 +122,10 @@ Professional.init({
         set(value) {
             this.setDataValue('imagesUrl', JSON.stringify(value));
         },
+        get() {
+            const raw = this.getDataValue("imagesUrl");
+            return raw ? JSON.parse(raw) : [];
+        }
     },
     email: {
         type: DataTypes.STRING,
