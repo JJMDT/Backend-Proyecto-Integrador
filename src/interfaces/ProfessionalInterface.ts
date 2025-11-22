@@ -50,3 +50,6 @@ export interface IProfessional {
 
 
 export type ProfessionalCreate = Omit<IProfessional , 'id' | 'createdAt' | 'updatedAt'>;
+
+export interface IProfessionalLogin extends Pick<IProfessional, 'email' | 'password'> {
+}

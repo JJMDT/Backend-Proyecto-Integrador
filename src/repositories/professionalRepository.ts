@@ -37,3 +37,12 @@ export const findProfessionalWithServices = async (professionalId: string) => {
         attributes: { exclude: ['password'] } // Excluir la contraseña por seguridad
     });
 };
+
+export const findByEmail = async (emailData: string) => {
+    const findProfessional = await Professional.findOne({
+        where: {
+            email: emailData
+        }
+    });
+    return findProfessional;
+}

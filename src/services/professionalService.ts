@@ -1,6 +1,12 @@
 //Contiene la lógica de negocio (qué hay que hacer, cómo combinar los datos)
 import { ProfessionalCreate } from '../interfaces/ProfessionalInterface';
-import { create, findAll, findAllWithServices,findProfessionalWithServices } from '../repositories/professionalRepository'
+import {
+    create,
+    findAll,
+    findAllWithServices,
+    findProfessionalWithServices,
+    findByEmail
+} from '../repositories/professionalRepository'
 
 //falta manejar los posibles errores
 export const createProfessional = async (professionalData: ProfessionalCreate) => {
@@ -8,7 +14,7 @@ export const createProfessional = async (professionalData: ProfessionalCreate) =
     return newProfessional
 }
 
-export const getAllProfessionals = async () =>{
+export const getAllProfessionals = async () => {
     const professionals = await findAll();
     return professionals;
 }
@@ -22,4 +28,13 @@ export const getAllProfessionalsWithServices = async () => {
 export const getProfessionalWithServices = async (professionalId: string) => {
     const professional = await findProfessionalWithServices(professionalId);
     return professional;
-} 
+}
+
+export const findProfessionalbyEmail = async (emailData: string) => {
+    const findProfessional = await findByEmail(emailData);
+    if (!findProfessional) {
+        const error = new Error("No se encontro el Profesional con ese email");
+        throw error
+    }
+    return findProfessional
+}

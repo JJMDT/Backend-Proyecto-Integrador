@@ -1,13 +1,25 @@
 import { Request, Response } from "express";
 import { logger } from "../config/logger";
 import { ProfessionalCreate } from '../interfaces/ProfessionalInterface'
-import { createProfessional, getAllProfessionals, getAllProfessionalsWithServices, getProfessionalWithServices } from '../services/professionalService'
+import {
+    createProfessional,
+    getAllProfessionals,
+    getAllProfessionalsWithServices,
+    getProfessionalWithServices
+} from '../services/professionalService';
+import { emailTemplates, sendEmail } from '../services/emailService';
+import bcrypt from 'bcrypt'
 
 export const create = async (req: Request, res: Response): Promise<Response> => {
     try {
         const professionalData = req.body as ProfessionalCreate
+        const hashedPassword = await bcrypt.hash(professionalData.password, 10);
+        professionalData.password = hashedPassword;
         logger.info("Datos recibidos para crear un Professional ", professionalData)
         const newProfessional = await createProfessional(professionalData)
+        const { welcome } = emailTemplates
+        const emailWelcome = welcome(`${newProfessional.name} ${newProfessional.lastname}`);
+        await sendEmail(newProfessional.email, emailWelcome.subject, emailWelcome.html);
         const response = {
             status: "success 201",
             message: "Profesional creado de manera exitosa",
