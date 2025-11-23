@@ -34,7 +34,48 @@ export const emailTemplates = {
     <p>Gracias por registrarte </p>
     `
   }),
-  
+  professionalProfileUpdate: (name: string) => ({
+    subject: "Perfil actualizado exitosamente",
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <style>
+          body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+          .container { max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f9f9f9; }
+          .header { background-color: #4CAF50; color: white; padding: 20px; text-align: center; border-radius: 5px 5px 0 0; }
+          .content { background-color: white; padding: 30px; border-radius: 0 0 5px 5px; text-align: center; }
+          .icon { font-size: 48px; margin-bottom: 20px; display: block; }
+          .btn { display: inline-block; padding: 12px 24px; background-color: #4CAF50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin-top: 20px; }
+          .footer { text-align: center; margin-top: 20px; padding: 15px; font-size: 12px; color: #666; }
+        </style>
+      </head>
+      <body>
+        <div class="container">
+          <div class="header">
+            <h1>Perfil Actualizado</h1>
+          </div>
+          
+          <div class="content">
+            <span class="icon">👨‍⚕️✅</span>
+            <h2>¡Hola ${name}!</h2>
+            <p>Te informamos que los cambios en tu perfil profesional se han guardado correctamente.</p>
+            <p>Tu nueva información ya está visible para todos los clientes en la plataforma.</p>
+            
+            <p style="margin-top: 20px; color: #666; font-size: 14px;">
+              Si no realizaste estos cambios, por favor contacta a soporte inmediatamente.
+            </p>
+          </div>
+          
+          <div class="footer">
+            <p>Este es un email automático del sistema.</p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `
+  }),
+
   turnoconfirmado: (data: TurnoConfirmadoData) => ({
     subject: "✅ Confirmación de turno",
     html: `
