@@ -99,3 +99,40 @@ export const getOneWithServices = async (req: Request, res: Response): Promise<R
         });
     }
 };
+
+export const updateProfessional = async (req: Request, res: Response): Promise<Response> => {
+    const professionalId = req.params.id;
+    logger.info(`Recibiendo la petición para editar  el profesional con ID ${professionalId}`);
+    try {
+        const professional = await getProfessionalWithServices(professionalId);
+        if (!professional) {
+            logger.warn(`Profesional con ID ${professionalId} no encontrado`);
+            const error = new Error(`Profesional con ID ${professionalId} no encontrado`);
+            error.name = "404"
+            throw error
+        }
+        professional.set(req.body); // modifico lo que viene por body
+        await professional.save(); // lo guardo en la DB
+        const response = {
+            status: 200,
+            message: `Mostrando profesional con ID ${professionalId} y sus servicios`,
+            data: professional
+        };
+        logger.info(`Profesional con ID ${professionalId}, editado exitosamente`)
+        return res.status(response.status).json(response);
+    } catch (error: any) {
+        logger.error(`Error al obtener profesional con ID ${professionalId} y sus servicios:`, error);
+        if (error.name === '404') {
+            return res.status(Number(error.name)).json({
+                status: Number(error.name),
+                message: error.message,
+                error: error
+            });
+        }
+        return res.status(400).json({
+            status: 400,
+            message: error.message,
+            error: error
+        });
+    }
+}
