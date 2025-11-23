@@ -112,6 +112,7 @@ export const updateProfessional = async (req: Request, res: Response): Promise<R
             throw error
         }
         professional.set(req.body); // modifico lo que viene por body
+        professional.active = true;
         await professional.save(); // lo guardo en la DB
         const response = {
             status: 200,
