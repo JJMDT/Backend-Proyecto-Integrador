@@ -24,7 +24,6 @@ export const findAllWithServices = async () => {
                 attributes: ['id', 'name', 'description', 'price', 'createdAt', 'updatedAt']
             }
         ],
-        attributes: { exclude: ['password'] }.exclude, // Excluir la contraseña por seguridad
          where: {
             active: true
         }
@@ -41,9 +40,7 @@ export const findProfessionalWithServices = async (professionalId: string) => {
                 as: 'services',
                 attributes: ['id', 'name', 'description', 'price', 'createdAt', 'updatedAt']
             }
-        ],
-        attributes: { exclude: ['password'] }, // Excluir la contraseña por seguridad
-        
+        ],        
     });
 };
 
