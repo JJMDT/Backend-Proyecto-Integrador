@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/JJMDT/Backend-Proyecto-Integrador#readme",
   "dependencies": {
+    "@google/generative-ai": "^0.24.1",
     "@types/jsonwebtoken": "^9.0.10",
     "axios": "^1.13.2",
     "bcrypt": "^6.0.0",
