@@ -8,7 +8,8 @@ import {
     getProfessionalWithServices
 } from '../services/professionalService';
 import { emailTemplates, sendEmail } from '../services/emailService';
-import bcrypt from 'bcrypt'
+import bcrypt from 'bcrypt';
+import { getCoordinates, IAddressData } from '../services/geoService'
 
 export const create = async (req: Request, res: Response): Promise<Response> => {
     try {
@@ -111,7 +112,16 @@ export const updateProfessional = async (req: Request, res: Response): Promise<R
             error.name = "404"
             throw error
         }
+        const addressData: IAddressData = {
+            street: professional.street,
+            streetNumber: professional.streetNumber,
+            province: professional.province,
+        }
+        const location = await getCoordinates(addressData);
         professional.set(req.body); // modifico lo que viene por body
+        if (location) {
+            professional.location = location as unknown as string
+        }
         professional.active = true;
         await professional.save(); // lo guardo en la DB
         const response = {
