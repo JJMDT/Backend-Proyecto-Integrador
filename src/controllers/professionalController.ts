@@ -118,6 +118,9 @@ export const updateProfessional = async (req: Request, res: Response): Promise<R
             message: `Mostrando profesional con ID ${professionalId} y sus servicios`,
             data: professional
         };
+        const { professionalProfileUpdate } = emailTemplates;
+        const emailWelcome = professionalProfileUpdate(`${professional.name} ${professional.lastname}`);
+        await sendEmail(professional.email, emailWelcome.subject, emailWelcome.html);
         logger.info(`Profesional con ID ${professionalId}, editado exitosamente`)
         return res.status(response.status).json(response);
     } catch (error: any) {
