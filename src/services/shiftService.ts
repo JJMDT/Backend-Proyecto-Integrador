@@ -238,3 +238,37 @@ export const createShiftWithQR = async (shiftData: ShiftInput) => {
     throw error;
   }
 };
+
+/**
+ * Obtener horarios disponibles para una fecha y servicio específico
+ * @param date - Fecha en formato YYYY-MM-DD
+ * @param idService - ID del servicio
+ * @returns Array de horarios disponibles
+ */
+export const getAvailableHours = async (date: string, idService: string) => {
+  try {
+    // Convertir string a Date
+    const dateObj = new Date(date);
+    
+    // Obtener turnos ocupados para esa fecha y servicio
+    const occupiedShifts = await shiftRepository.findByDateAndService(dateObj, idService);
+    const occupiedTimes = occupiedShifts.map((shift: any) => shift.time);
+    
+    // Definir horarios de trabajo (de 9:00 a 18:00, cada 30 minutos)
+    const workHours = [];
+    for (let hour = 9; hour < 18; hour++) {
+      workHours.push(`${hour.toString().padStart(2, '0')}:00`);
+      workHours.push(`${hour.toString().padStart(2, '0')}:30`);
+    }
+    
+    // Filtrar horarios disponibles
+    const availableHours = workHours.filter(time => !occupiedTimes.includes(time));
+    
+    logger.info(`Horarios disponibles para ${date} - Servicio ${idService}: ${availableHours.length} slots`);
+    
+    return availableHours;
+  } catch (error) {
+    logger.error('Error al obtener horarios disponibles:', error);
+    throw error;
+  }
+};

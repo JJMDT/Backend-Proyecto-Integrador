@@ -1,19 +1,41 @@
 import { Request, Response } from "express";
 import { chatbotService } from "../services/chatbot.service";
+import jwt, { JwtPayload } from 'jsonwebtoken';
 
 // Servicios reales de tu backend:
 import { getAllProfessionals, getProfessionalWithServices } from "../services/professionalService";
 import { getAllServices } from "../services/serviceService";
-import { getAllShifts } from "../services/shiftService";
+import { getAllShifts, getAvailableHours } from "../services/shiftService";
+
+// Extender Request para incluir user del token
+interface ITokenRequest extends Request {
+  user?: string | JwtPayload;
+}
 
 export class ChatbotController {
 
-  async ask(req: Request, res: Response) {
+  async ask(req: ITokenRequest, res: Response) {
     try {
       const { message } = req.body;
 
+      // Verificar si el usuario está autenticado (opcional)
+      let isAuthenticated = false;
+      let userId = null;
+      
+      const token = req.headers.authorization;
+      if (token) {
+        try {
+          const decoded = jwt.verify(token.split(' ')[1], process.env.JWT_SECRET as string) as JwtPayload;
+          isAuthenticated = true;
+          userId = decoded.id;
+        } catch (error) {
+          // Token inválido, continuar como no autenticado
+          isAuthenticated = false;
+        }
+      }
+
       // 1) PRIMERA RESPUESTA: La IA decide si necesita datos o no
-      const aiRawResponse = await chatbotService.askMessage(message);
+      const aiRawResponse = await chatbotService.askMessage(message, isAuthenticated);
 
       // Intentar extraer JSON de la respuesta (puede venir con markdown)
       let actionJSON;
@@ -67,9 +89,29 @@ export class ChatbotController {
           break;
 
         case "get_available_shifts":
-          // Por ahora, como no tenemos función específica, obtenemos todos los turnos
-          // y dejamos que la IA filtre la información
+          // Obtener todos los turnos
           dataFromBackend = await getAllShifts();
+          break;
+
+        case "get_available_hours":
+          // Solo disponible para usuarios autenticados
+          if (!isAuthenticated) {
+            return res.json({
+              answer: "Para consultar horarios disponibles necesitás iniciar sesión. ¿Necesitás ayuda para registrarte o iniciar sesión?"
+            });
+          }
+          
+          // Verificar que tenga los parámetros necesarios
+          if (!actionJSON.payload.date || !actionJSON.payload.idService) {
+            return res.json({
+              answer: "Para consultar horarios disponibles necesito que me indiques la fecha y el servicio. Por ejemplo: '¿Hay turnos disponibles el 25/12/2024 para consulta general?'"
+            });
+          }
+          
+          dataFromBackend = await getAvailableHours(
+            actionJSON.payload.date,
+            actionJSON.payload.idService
+          );
           break;
 
         default:
@@ -95,7 +137,8 @@ Genera una respuesta clara, amable y profesional presentando esta información.
 NO devuelvas JSON ahora, solo texto amigable para el usuario.
 Si son servicios, menciona nombre, descripción y precio.
 Si son profesionales, menciona nombre, especialidad y establecimiento.
-      `);
+Si son horarios disponibles, presenta los horarios de forma ordenada y clara.
+      `, isAuthenticated);
 
       return res.json({ answer: finalResponse });
 

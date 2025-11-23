@@ -144,3 +144,23 @@ export const checkTimeAvailability = async (date: Date, time: string, idService:
     throw error;
   }
 };
+
+// Obtener turnos ocupados por fecha y servicio
+export const findByDateAndService = async (date: Date, idService: string) => {
+  try {
+    const shifts = await Shift.findAll({
+      where: {
+        date,
+        idService
+      },
+      attributes: ['time'],
+      order: [['time', 'ASC']]
+    });
+    
+    logger.info(`Se encontraron ${shifts.length} turnos para la fecha ${date} y servicio ${idService}`);
+    return shifts;
+  } catch (error) {
+    logger.error('Error al obtener turnos por fecha y servicio:', error);
+    throw error;
+  }
+};
