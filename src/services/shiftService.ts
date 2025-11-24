@@ -272,3 +272,19 @@ export const getAvailableHours = async (date: string, idService: string) => {
     throw error;
   }
 };
+
+// Obtener turnos por profesional
+export const getShiftsByProfessionalId = async (idProfessional: string) => {
+  try {
+    if (!idProfessional) {
+      throw new Error('El ID del profesional es requerido');
+    }
+
+    const shifts = await shiftRepository.findByProfessionalId(idProfessional);
+    logger.info(`Service: Se obtuvieron ${shifts.length} turnos para el profesional ${idProfessional}`);
+    return shifts;
+  } catch (error) {
+    logger.error(`Error al obtener turnos del profesional ${idProfessional} en service:`, error);
+    throw error;
+  }
+};
