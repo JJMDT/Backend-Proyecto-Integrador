@@ -164,3 +164,38 @@ export const findByDateAndService = async (date: Date, idService: string) => {
     throw error;
   }
 };
+
+// Obtener turnos por profesional
+export const findByProfessionalId = async (idProfessional: string) => {
+  try {
+    const shifts = await Shift.findAll({
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name', 'lastname', 'email']
+        },
+        {
+          model: Service,
+          as: 'service',
+          attributes: ['id', 'name', 'description', 'price'],
+          where: { idProfessional },
+          include: [
+            {
+              model: Professional,
+              as: 'professional',
+              attributes: ['id', 'name', 'lastname', 'specialty', 'nameEstablishment']
+            }
+          ]
+        }
+      ],
+      order: [['date', 'ASC'], ['time', 'ASC']]
+    });
+    
+    logger.info(`Se encontraron ${shifts.length} turnos para el profesional ${idProfessional}`);
+    return shifts;
+  } catch (error) {
+    logger.error(`Error al obtener turnos del profesional ${idProfessional} en repository:`, error);
+    throw error;
+  }
+};

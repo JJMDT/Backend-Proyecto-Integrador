@@ -143,3 +143,35 @@ export const getShiftById = async (req: Request, res: Response) => {
     });
   }
 };
+
+// Obtener turnos por profesional
+export const getShiftsByProfessional = async (req: Request, res: Response) => {
+  try {
+    const { idProfessional } = req.params;
+
+    if (!idProfessional) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'El ID del profesional es requerido'
+      });
+    }
+
+    const shifts = await shiftService.getShiftsByProfessionalId(idProfessional);
+
+    logger.info(`Controller: Se obtuvieron ${shifts.length} turnos para el profesional ${idProfessional}`);
+    
+    res.status(200).json({
+      status: 'success',
+      message: 'Turnos del profesional obtenidos exitosamente',
+      data: shifts,
+      count: shifts.length
+    });
+  } catch (error: any) {
+    logger.error(`Error en getShiftsByProfessional controller:`, error);
+    
+    res.status(500).json({
+      status: 'error',
+      message: error.message || 'Error al obtener los turnos del profesional'
+    });
+  }
+};
