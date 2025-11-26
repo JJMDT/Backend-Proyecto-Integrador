@@ -18,8 +18,8 @@ export const create = async (req: Request, res: Response): Promise<Response> => 
         professionalData.password = hashedPassword;
         logger.info("Datos recibidos para crear un Professional ", professionalData)
         const newProfessional = await createProfessional(professionalData)
-        const { welcome } = emailTemplates
-        const emailWelcome = welcome(`${newProfessional.name} ${newProfessional.lastname}`);
+        const { welcomeProfessional } = emailTemplates
+        const emailWelcome = welcomeProfessional(`${newProfessional.name} ${newProfessional.lastname}`);
         await sendEmail(newProfessional.email, emailWelcome.subject, emailWelcome.html);
         const response = {
             status: "success 201",

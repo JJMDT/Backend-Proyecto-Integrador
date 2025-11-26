@@ -2,7 +2,7 @@ import * as shiftRepository from '../repositories/shiftRepository';
 import { ShiftInput } from '../interfaces/ShiftInterface';
 import { logger } from '../config/logger';
 import { generateQRCode, QRShiftData } from './qrService';
-import { sendEmail, sendEmailWithAttachments, emailTemplates, TurnoConfirmadoData } from './emailService';
+import { sendEmail, sendEmailWithAttachments, emailTemplates, TurnoConfirmadoData, IProfessionalNewShiftData } from './emailService';
 
 // Crear un nuevo turno
 export const createShift = async (shiftData: ShiftInput) => {
@@ -11,7 +11,7 @@ export const createShift = async (shiftData: ShiftInput) => {
     const shiftDate = new Date(shiftData.date);
     const today = new Date();
     today.setHours(0, 0, 0, 0);
-    
+
     if (shiftDate < today) {
       throw new Error('La fecha del turno debe ser futura');
     }
@@ -30,7 +30,7 @@ export const createShift = async (shiftData: ShiftInput) => {
     // Crear el turno
     const newShift = await shiftRepository.create(shiftData);
     logger.info(`Turno creado exitosamente en service con ID: ${newShift.id}`);
-    
+
     return newShift;
   } catch (error) {
     logger.error('Error al crear turno en service:', error);
@@ -74,7 +74,7 @@ export const getShiftById = async (id: string) => {
     }
 
     const shift = await shiftRepository.findById(id);
-    
+
     if (!shift) {
       throw new Error('Turno no encontrado');
     }
@@ -90,7 +90,7 @@ export const getShiftById = async (id: string) => {
 // Validar datos de entrada para crear turno
 export const validateShiftInput = (shiftData: any): shiftData is ShiftInput => {
   const requiredFields = ['idUser', 'idService', 'date', 'time', 'phone', 'petname'];
-  
+
   for (const field of requiredFields) {
     if (!shiftData[field]) {
       throw new Error(`El campo ${field} es requerido`);
@@ -125,10 +125,10 @@ export const createShiftWithQR = async (shiftData: ShiftInput) => {
   try {
     // Crear el turno
     const newShift = await createShift(shiftData);
-    
+
     // Obtener el turno completo con todas las relaciones (user, service, professional)
     const shiftComplete: any = await shiftRepository.findById(newShift.id);
-    
+
     if (!shiftComplete) {
       throw new Error('No se pudo obtener la información completa del turno');
     }
@@ -136,13 +136,13 @@ export const createShiftWithQR = async (shiftData: ShiftInput) => {
     // Extraer datos con validación
     const user = shiftComplete.user;
     const service = shiftComplete.service;
-    
+
     if (!user || !service) {
       throw new Error('Información del usuario o servicio no disponible');
     }
 
     const professional = service.professional;
-    
+
     if (!professional) {
       throw new Error('Información del profesional no disponible');
     }
@@ -179,11 +179,11 @@ export const createShiftWithQR = async (shiftData: ShiftInput) => {
     // Preparar datos para el email
     const emailData: TurnoConfirmadoData = {
       userName: `${user.name} ${user.lastname}`,
-      date: new Date(shiftComplete.date).toLocaleDateString('es-AR', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
+      date: new Date(shiftComplete.date).toLocaleDateString('es-AR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
       }),
       time: shiftComplete.time,
       petName: shiftComplete.petname,
@@ -219,8 +219,25 @@ export const createShiftWithQR = async (shiftData: ShiftInput) => {
     } else {
       emailSent = await sendEmail(user.email, emailTemplate.subject, emailTemplate.html);
     }
-    
+
     if (emailSent) {
+      const data: IProfessionalNewShiftData = {
+        professionalName: `${professional.name} ${professional.lastname}`,
+        establishmentName: professional.nameEstablishment,
+        serviceName: service.name,
+        servicePrice: service.price,
+        date: new Date(shiftComplete.date).toLocaleDateString('es-AR', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric'
+        }),
+        time: shiftComplete.time,
+        userName: `${user.name} ${user.lastname}`,
+        petName: shiftComplete.petname
+      }
+      const emailTemplateProfessional = emailTemplates.professionalNewShift(data);
+      await sendEmail(professional.email , emailTemplateProfessional.subject , emailTemplateProfessional.html);
       logger.info(`Email de confirmación enviado a ${user.email}`);
     } else {
       logger.warn(`No se pudo enviar el email de confirmación a ${user.email}`);
@@ -232,7 +249,7 @@ export const createShiftWithQR = async (shiftData: ShiftInput) => {
       qrCode: qrCodeImage,
       emailSent: emailSent
     };
-    
+
   } catch (error) {
     logger.error('Error al crear turno con QR:', error);
     throw error;
@@ -249,23 +266,23 @@ export const getAvailableHours = async (date: string, idService: string) => {
   try {
     // Convertir string a Date
     const dateObj = new Date(date);
-    
+
     // Obtener turnos ocupados para esa fecha y servicio
     const occupiedShifts = await shiftRepository.findByDateAndService(dateObj, idService);
     const occupiedTimes = occupiedShifts.map((shift: any) => shift.time);
-    
+
     // Definir horarios de trabajo (de 9:00 a 18:00, cada 30 minutos)
     const workHours = [];
     for (let hour = 9; hour < 18; hour++) {
       workHours.push(`${hour.toString().padStart(2, '0')}:00`);
       workHours.push(`${hour.toString().padStart(2, '0')}:30`);
     }
-    
+
     // Filtrar horarios disponibles
     const availableHours = workHours.filter(time => !occupiedTimes.includes(time));
-    
+
     logger.info(`Horarios disponibles para ${date} - Servicio ${idService}: ${availableHours.length} slots`);
-    
+
     return availableHours;
   } catch (error) {
     logger.error('Error al obtener horarios disponibles:', error);
