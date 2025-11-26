@@ -9,3 +9,18 @@ export const create = async (service: ServiceInput) => {
 export const findAll = async () => {
     return await Service.findAll();
 };
+
+// Función para obtener un servicio por ID
+export const findById = async (id: string) => {
+    return await Service.findByPk(id);
+};
+
+// Función para eliminar un servicio por ID
+export const deleteById = async (id: string) => {
+    const service = await Service.findByPk(id);
+    if (!service) {
+        return null;
+    }
+    await service.destroy();
+    return service;
+};
