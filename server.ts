@@ -9,7 +9,7 @@ dotenv.config();
 
 // Configuración del servidor
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || 'localhost';
+const HOST = process.env.HOST || '0.0.0.0';
 
 //aca ejecuto mis tareas que estan con la libreria Cron
 loadCronJobs()
