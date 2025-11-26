@@ -104,7 +104,7 @@ export const findById = async (id: string) => {
             {
               model: Professional,
               as: 'professional',
-              attributes: ['id', 'name', 'lastname', 'specialty', 'nameEstablishment']
+              attributes: ['id', 'name', 'lastname', 'specialty', 'nameEstablishment' , 'email']
             }
           ]
         }
