@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as shiftController from '../controllers/shiftController';
+import { verifyToken } from '../middlewares/authMiddleware';
 
 const router = Router();
 
@@ -12,7 +13,10 @@ router.get('/:id', shiftController.getShiftById);
 // GET /api/shifts/user/:idUser - Obtener turnos por usuario
 router.get('/user/:idUser', shiftController.getShiftsByUser);
 
-// POST /api/shifts - Crear un nuevo turno
-router.post('/', shiftController.createShift);
+// GET /api/shifts/professional/:idProfessional - Obtener turnos por profesional
+router.get('/professional/:idProfessional', shiftController.getShiftsByProfessional);
+
+// POST /api/shifts - Crear un nuevo turno - verificar token
+router.post('/',verifyToken, shiftController.createShift);
 
 export default router;

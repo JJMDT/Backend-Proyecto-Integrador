@@ -7,6 +7,8 @@ import serviceRoutes from './routes/serviceRoutes';
 import professionalRoutes from './routes/professionalRoutes';
 import shiftRoutes from './routes/shiftRoutes';
 import authRoutes  from './routes/authRoutes';
+import chatbotRoutes from "./routes/chatbot.routes";
+
 
 // Inicializamos la aplicación de Express
 const app = express();
@@ -44,6 +46,7 @@ app.use("/services", serviceRoutes);
 app.use("/professionals", professionalRoutes);
 app.use("/shifts", shiftRoutes);
 app.use('/auth',authRoutes);
+app.use("/chatbot", chatbotRoutes);
 
 
 // Manejador de errores 404. Este middleware debe ir al final de todas las rutas
