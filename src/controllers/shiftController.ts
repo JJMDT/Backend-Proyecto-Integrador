@@ -175,3 +175,44 @@ export const getShiftsByProfessional = async (req: Request, res: Response) => {
     });
   }
 };
+
+// Eliminar turno por ID
+export const deleteShift = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+
+    if (!id) {
+      return res.status(400).json({
+        status: 'error',
+        message: 'El ID del turno es requerido'
+      });
+    }
+
+    const result = await shiftService.deleteShift(id);
+
+    logger.info(`Controller: Turno eliminado exitosamente con ID: ${id}`);
+    
+    res.status(200).json({
+      status: 'success',
+      message: 'Turno eliminado exitosamente. Se ha enviado un email de cancelación al usuario.',
+      data: {
+        deletedShift: result.shift,
+        emailSent: result.emailSent
+      }
+    });
+  } catch (error: any) {
+    logger.error(`Error en deleteShift controller:`, error);
+    
+    if (error.message === 'Turno no encontrado') {
+      return res.status(404).json({
+        status: 'error',
+        message: 'Turno no encontrado'
+      });
+    }
+    
+    res.status(500).json({
+      status: 'error',
+      message: error.message || 'Error al eliminar el turno'
+    });
+  }
+};

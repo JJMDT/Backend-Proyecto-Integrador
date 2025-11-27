@@ -36,6 +36,16 @@ export interface IProfessionalNewShiftData {
   establishmentName: string;
 }
 
+export interface TurnoCanceladoData {
+  userName: string;
+  date: string;
+  time: string;
+  petName: string;
+  serviceName: string;
+  professionalName: string;
+  establishmentName: string;
+}
+
 //plantillas para el envio de email
 export const emailTemplates = {
   welcome: (name: string) => ({
@@ -514,6 +524,157 @@ export const emailTemplates = {
           </tr>
         </table>
 
+      </body>
+      </html>
+    `
+  }),
+
+  turnoCancelado: (data: TurnoCanceladoData) => ({
+    subject: "❌ Turno cancelado",
+    html: `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <style>
+          body {
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+          }
+          .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+          }
+          .header {
+            background-color: #e74c3c;
+            padding: 30px 20px;
+            text-align: center;
+          }
+          .header h1 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            letter-spacing: 1px;
+          }
+          .content {
+            padding: 40px 30px;
+            text-align: center;
+          }
+          .icon {
+            font-size: 50px;
+            margin-bottom: 20px;
+            display: block;
+          }
+          .detail-card {
+            background-color: #ffeaea;
+            border: 1px solid #f5c6cb;
+            border-left: 5px solid #e74c3c;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+          }
+          .detail-row {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+          }
+          .detail-row:last-child {
+            border-bottom: none;
+          }
+          .detail-label {
+            font-weight: bold;
+            color: #e74c3c;
+            display: inline-block;
+            width: 120px;
+          }
+          .detail-value {
+            color: #333;
+          }
+          .footer {
+            background-color: #f0f0f0;
+            color: #888;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            border-top: 1px solid #e0e0e0;
+          }
+        </style>
+      </head>
+      <body>
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td align="center">
+              <div class="container">
+                <div class="header">
+                  <h1>Turno Cancelado</h1>
+                </div>
+
+                <div class="content">
+                  <span class="icon">❌📅</span>
+                  
+                  <h2 style="color: #e74c3c; margin-top: 0;">Hola ${data.userName}</h2>
+                  
+                  <p>Lamentamos informarte que tu turno ha sido cancelado. Los detalles del turno cancelado son:</p>
+
+                  <div class="detail-card">
+                    <h3 style="margin-top: 0; color: #e74c3c;">Detalles del Turno Cancelado</h3>
+                    
+                    <div class="detail-row">
+                      <span class="detail-label">📅 Fecha:</span>
+                      <span class="detail-value">${data.date}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                      <span class="detail-label">🕐 Hora:</span>
+                      <span class="detail-value">${data.time}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                      <span class="detail-label">🐾 Mascota:</span>
+                      <span class="detail-value">${data.petName}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                      <span class="detail-label">💼 Servicio:</span>
+                      <span class="detail-value">${data.serviceName}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                      <span class="detail-label">👨‍⚕️ Profesional:</span>
+                      <span class="detail-value">${data.professionalName}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                      <span class="detail-label">🏥 Establecimiento:</span>
+                      <span class="detail-value">${data.establishmentName}</span>
+                    </div>
+                  </div>
+                  
+                  <p style="margin-top: 30px; color: #666;">
+                    Si tienes alguna pregunta sobre esta cancelación, no dudes en contactarnos.
+                  </p>
+                  
+                  <p style="color: #666;">
+                    Puedes reservar un nuevo turno cuando gustes a través de nuestra plataforma.
+                  </p>
+                </div>
+
+                <div class="footer">
+                  <p>Este es un email automático, por favor no respondas a este mensaje.</p>
+                  <p>© Guau que Corte</p>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </table>
       </body>
       </html>
     `
