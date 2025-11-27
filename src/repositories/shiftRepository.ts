@@ -2,7 +2,7 @@ import Shift from '../models/shiftModel';
 import User from '../models/userModel';
 import Service from '../models/serviceModel';
 import Professional from '../models/professionalModel';
-import { ShiftInput } from '../interfaces/ShiftInterface';
+import { ShiftInput, ShiftWithDetails } from '../interfaces/ShiftInterface';
 import { logger } from '../config/logger';
 
 // Crear un nuevo turno
@@ -196,6 +196,56 @@ export const findByProfessionalId = async (idProfessional: string) => {
     return shifts;
   } catch (error) {
     logger.error(`Error al obtener turnos del profesional ${idProfessional} en repository:`, error);
+    throw error;
+  }
+};
+
+// Eliminar turno por ID
+export const deleteById = async (id: string): Promise<any | null> => {
+  try {
+    const shift = await Shift.findByPk(id, {
+      include: [
+        {
+          model: User,
+          as: 'user',
+          attributes: ['id', 'name', 'lastname', 'email']
+        },
+        {
+          model: Service,
+          as: 'service',
+          attributes: ['id', 'name', 'description', 'price'],
+          include: [
+            {
+              model: Professional,
+              as: 'professional',
+              attributes: ['id', 'name', 'lastname', 'specialty', 'nameEstablishment']
+            }
+          ]
+        }
+      ]
+    });
+    
+    if (!shift) {
+      logger.warn(`No se encontró turno con ID: ${id} para eliminar`);
+      return null;
+    }
+    
+    // Convertir a plain object para preservar las relaciones
+    const shiftData = shift.toJSON();
+    
+    const deletedRows = await Shift.destroy({
+      where: { id }
+    });
+    
+    if (deletedRows > 0) {
+      logger.info(`Turno eliminado exitosamente con ID: ${id}`);
+      return shiftData; // Retornamos los datos del turno eliminado para el email
+    } else {
+      logger.warn(`No se pudo eliminar el turno con ID: ${id}`);
+      return null;
+    }
+  } catch (error) {
+    logger.error(`Error al eliminar turno con ID ${id} en repository:`, error);
     throw error;
   }
 };

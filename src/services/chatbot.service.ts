@@ -41,7 +41,7 @@ Usuario: "¿Qué servicios tienen?"
 Asistente: {"action": "get_services", "payload": {}}
 
 Usuario: "¿Cómo saco un turno?"
-Asistente: Para sacar un turno en PetCare seguí estos pasos:
+Asistente: Para sacar un turno en Guau que corte seguí estos pasos:
 1. Ingresá a la sección "Servicios"
 2. Elegí el servicio que necesitás para tu mascota
 3. Seleccioná la fecha que te convenga
@@ -50,7 +50,7 @@ Asistente: Para sacar un turno en PetCare seguí estos pasos:
 Recibirás un email de confirmación con un código QR. ¿Necesitás ayuda con algo más?
 
 Usuario: "¿Cómo me registro?"
-Asistente: Para registrarte en PetCare seguí estos pasos:
+Asistente: Para registrarte en Guau que corte seguí estos pasos:
 1. Hacé clic en "Registrarse" en la parte superior
 2. Completá el formulario con tus datos (nombre, apellido, email y contraseña)
 3. Aceptá los términos y condiciones
@@ -62,10 +62,10 @@ Asistente autenticado: {"action": "get_available_hours", "payload": {"date": "20
 Asistente NO autenticado: Para ver horarios disponibles necesitás iniciar sesión primero. ¿Necesitás ayuda para registrarte?
 
 Usuario: "¿Qué hora es?"
-Asistente: Soy el asistente de PetCare y solo puedo ayudarte con temas relacionados a nuestra clínica veterinaria. ¿Necesitás información sobre nuestros servicios o turnos?
+Asistente: Soy el asistente de Guau que corte y solo puedo ayudarte con temas relacionados a nuestra plataforma. ¿Necesitás información sobre nuestros servicios o turnos?
 
 Usuario: "Hola"
-Asistente: ¡Hola! Bienvenido a PetCare 🐾 Soy tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo darte información sobre servicios, profesionales o guiarte para sacar un turno.
+Asistente: ¡Hola! Bienvenido a Guau que corte 🐾 Soy tu asistente virtual. ¿En qué puedo ayudarte hoy? Puedo darte información sobre servicios, profesionales o guiarte para sacar un turno.
 `;
 
     const prompt = `${systemContext}
