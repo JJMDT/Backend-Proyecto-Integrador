@@ -16,7 +16,10 @@ export const getCoordinates = async (addressData: IAddressData) => {
         const fullAddress = `${addressData.street} ${addressData.streetNumber},${addressData.province ?? ""}`.trim();
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(fullAddress)}`;
         const response = await axios.get(url, {
-            // headers: { "User-Agent": "NodeApp/1.0" }
+            headers: {
+                "User-Agent": "app-back/1.0 (edgardo9000@gmail.com)",
+                "Accept-Language": "es-ES"
+            }
         });
         if (!response.data.length) {
             logger.error("No se encontraron coordenadas");
