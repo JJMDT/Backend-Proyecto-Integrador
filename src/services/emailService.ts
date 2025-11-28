@@ -110,7 +110,7 @@ export const emailTemplates = {
                   </p>
 
                   <div class="btn-container">
-                    <a href="https://develop.d328gbqffqdwnq.amplifyapp.com/" class="btn" target="_blank">
+                    <a href="https://main.d3mszaa590s8z5.amplifyapp.com/" class="btn" target="_blank">
                       Ingresar a la Plataforma
                     </a>
                   </div>
