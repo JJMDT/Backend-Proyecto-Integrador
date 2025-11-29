@@ -19,4 +19,7 @@ router.get('/professional/:idProfessional', shiftController.getShiftsByProfessio
 // POST /api/shifts - Crear un nuevo turno - verificar token
 router.post('/',verifyToken, shiftController.createShift);
 
+// DELETE /api/shifts/:id - Eliminar turno por ID - verificar token
+router.delete('/:id', verifyToken, shiftController.deleteShift);
+
 export default router;

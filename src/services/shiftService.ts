@@ -2,7 +2,7 @@ import * as shiftRepository from '../repositories/shiftRepository';
 import { ShiftInput } from '../interfaces/ShiftInterface';
 import { logger } from '../config/logger';
 import { generateQRCode, QRShiftData } from './qrService';
-import { sendEmail, sendEmailWithAttachments, emailTemplates, TurnoConfirmadoData, IProfessionalNewShiftData } from './emailService';
+import { sendEmail, sendEmailWithAttachments, emailTemplates, TurnoConfirmadoData, IProfessionalNewShiftData, TurnoCanceladoData } from './emailService';
 
 // Crear un nuevo turno
 export const createShift = async (shiftData: ShiftInput) => {
@@ -302,6 +302,81 @@ export const getShiftsByProfessionalId = async (idProfessional: string) => {
     return shifts;
   } catch (error) {
     logger.error(`Error al obtener turnos del profesional ${idProfessional} en service:`, error);
+    throw error;
+  }
+};
+
+// Eliminar turno por ID con envío de email de cancelación
+export const deleteShift = async (id: string) => {
+  try {
+    if (!id) {
+      throw new Error('El ID del turno es requerido');
+    }
+
+    // Eliminar el turno y obtener los datos para el email
+    const deletedShift: any = await shiftRepository.deleteById(id);
+
+    if (!deletedShift) {
+      throw new Error('Turno no encontrado');
+    }
+
+    // Extraer datos con validación
+    const user = deletedShift.user;
+    const service = deletedShift.service;
+
+    if (!user || !service) {
+      logger.warn(`Información incompleta del turno eliminado ${id}. Email no enviado.`);
+      return {
+        shift: deletedShift,
+        emailSent: false
+      };
+    }
+
+    const professional = service.professional;
+
+    if (!professional) {
+      logger.warn(`Información del profesional no disponible para turno ${id}. Email no enviado.`);
+      return {
+        shift: deletedShift,
+        emailSent: false
+      };
+    }
+
+    // Preparar datos para el email de cancelación
+    const emailData: TurnoCanceladoData = {
+      userName: `${user.name} ${user.lastname}`,
+      date: new Date(deletedShift.date).toLocaleDateString('es-AR', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      }),
+      time: deletedShift.time,
+      petName: deletedShift.petname,
+      serviceName: service.name,
+      professionalName: `${professional.name} ${professional.lastname}`,
+      establishmentName: professional.nameEstablishment
+    };
+
+    // Enviar email de cancelación
+    const emailTemplate = emailTemplates.turnoCancelado(emailData);
+    const emailSent = await sendEmail(user.email, emailTemplate.subject, emailTemplate.html);
+
+    if (emailSent) {
+      logger.info(`Email de cancelación enviado a ${user.email} para turno ${id}`);
+    } else {
+      logger.warn(`No se pudo enviar el email de cancelación a ${user.email} para turno ${id}`);
+    }
+
+    logger.info(`Service: Turno eliminado exitosamente con ID: ${id}`);
+    
+    return {
+      shift: deletedShift,
+      emailSent: emailSent
+    };
+
+  } catch (error) {
+    logger.error(`Error al eliminar turno con ID ${id} en service:`, error);
     throw error;
   }
 };
